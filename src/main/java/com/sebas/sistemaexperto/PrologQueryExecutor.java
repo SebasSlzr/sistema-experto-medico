@@ -82,4 +82,73 @@ public class PrologQueryExecutor {
         q.close();
         return "desconocida";
     }
+    
+    public static List<String> enfermedadesPorSintoma(String sintoma) {
+        List<String> enfermedades = new ArrayList<>();
+        
+        String consulta = "enfermedades_por_sintoma(" + sintoma + ", Enfermedad)";
+        Query q = new Query(consulta);
+        
+        while (q.hasMoreSolutions()) {
+            Map<String, Term> solucion = q.nextSolution();
+            Term enfTerm = solucion.get("Enfermedad");
+            if (enfTerm != null) {
+                String nombre = enfTerm.toString();
+                if (!enfermedades.contains(nombre)) {
+                    enfermedades.add(nombre);
+                }
+            }
+        }
+        q.close();
+        
+        return enfermedades;
+    }
+    
+    
+    public static List<String> diagnosticarPorCategoria(List<String> sintomas, String categoria) {
+        List<String> enfermedades = new ArrayList<>();
+        
+        StringBuilder listaSintomas = new StringBuilder("[");
+        for (int i = 0; i < sintomas.size(); i++) {
+            listaSintomas.append(sintomas.get(i));
+            if (i < sintomas.size() - 1) {
+                listaSintomas.append(", ");
+            }
+        }
+        listaSintomas.append("]");
+        
+        String consulta = "diagnostico_categoria(" + listaSintomas + ", " + categoria + ", Enfermedad)";
+        Query q = new Query(consulta);
+        
+        while (q.hasMoreSolutions()) {
+            Map<String, Term> solucion = q.nextSolution();
+            Term enfTerm = solucion.get("Enfermedad");
+            if (enfTerm != null) {
+                String nombre = enfTerm.toString();
+                if (!enfermedades.contains(nombre)) {
+                    enfermedades.add(nombre);
+                }
+            }
+        }
+        q.close();
+        
+        return enfermedades;
+    }
+    
+    public static boolean esCronica(String enfermedad) {
+        String consulta = "es_cronica(" + enfermedad + ")";
+        Query q = new Query(consulta);
+        boolean resultado = q.hasSolution();
+        q.close();
+        return resultado;
+    }
+    
+    public static boolean esViral(String enfermedad) {
+        String consulta = "es_viral(" + enfermedad + ")";
+        Query q = new Query(consulta);
+        boolean resultado = q.hasSolution();
+        q.close();
+        return resultado;
+    }
+    
 }
