@@ -47,6 +47,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         chkCansancio = new javax.swing.JCheckBox();
         chkNausea = new javax.swing.JCheckBox();
         btnDiagnosticar = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        cmbCategoria = new javax.swing.JComboBox<>();
         jScrollPane3 = new javax.swing.JScrollPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtResultados = new javax.swing.JTextArea();
@@ -113,6 +115,17 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         chkNausea.setText("Nausea");
 
+        btnDiagnosticar.setText("Diagnosticar");
+        btnDiagnosticar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDiagnosticarActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Categoria:");
+
+        cmbCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todas", "viral", "cronica", "alergia", "bacteriana" }));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -125,9 +138,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                             .addComponent(jLabel2)
                             .addComponent(jLabel3))
                         .addGap(23, 23, 23)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(spnEdad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtNombre)
+                            .addComponent(spnEdad)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addGap(18, 18, 18)
@@ -139,7 +152,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                             .addComponent(chkEstornudos)
                             .addComponent(chkSed)
                             .addComponent(chkCansancio)
-                            .addComponent(chkNausea))))
+                            .addComponent(chkNausea)
+                            .addComponent(btnDiagnosticar)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(18, 18, 18)
+                        .addComponent(cmbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -170,15 +188,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addComponent(chkCansancio)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chkNausea)
-                .addGap(0, 8, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(btnDiagnosticar)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(cmbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 127, Short.MAX_VALUE))
         );
-
-        btnDiagnosticar.setText("Diagnosticar");
-        btnDiagnosticar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDiagnosticarActionPerformed(evt);
-            }
-        });
 
         txtResultados.setColumns(20);
         txtResultados.setRows(5);
@@ -191,35 +208,30 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(121, 121, 121)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(35, 35, 35))
+                        .addContainerGap()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(61, 61, 61)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(76, 76, 76)
-                        .addComponent(btnDiagnosticar)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(248, 248, 248)
+                        .addComponent(jLabel1)))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnDiagnosticar)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
@@ -247,7 +259,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     private void btnDiagnosticarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDiagnosticarActionPerformed
         // Obtener sintomas seleccionados
-    List<String> sintomas = new ArrayList<>();
+     List<String> sintomas = new ArrayList<>();
     
     if (chkFiebre.isSelected()) sintomas.add("fiebre");
     if (chkTos.isSelected()) sintomas.add("tos");
@@ -263,14 +275,23 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         return;
     }
     
+    // Obtener categoria seleccionada
+    String categoria = cmbCategoria.getSelectedItem().toString();
+    
     // Realizar diagnostico
-    List<String> enfermedades = PrologQueryExecutor.diagnosticar(sintomas);
+    List<String> enfermedades;
+    if (categoria.equals("Todas")) {
+        enfermedades = PrologQueryExecutor.diagnosticar(sintomas);
+    } else {
+        enfermedades = PrologQueryExecutor.diagnosticarPorCategoria(sintomas, categoria);
+    }
     
     // Mostrar resultados
     StringBuilder resultado = new StringBuilder();
     resultado.append("Paciente: ").append(txtNombre.getText()).append("\n");
     resultado.append("Edad: ").append(spnEdad.getValue()).append("\n");
-    resultado.append("Sintomas: ").append(sintomas).append("\n\n");
+    resultado.append("Sintomas: ").append(sintomas).append("\n");
+    resultado.append("Categoria: ").append(categoria).append("\n\n");
     
     if (enfermedades.isEmpty()) {
         resultado.append("No se encontraron enfermedades.");
@@ -283,7 +304,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
     }
     
-        txtResultados.setText(resultado.toString());
+    txtResultados.setText(resultado.toString());
     }//GEN-LAST:event_btnDiagnosticarActionPerformed
 
     /**
@@ -312,11 +333,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkNausea;
     private javax.swing.JCheckBox chkSed;
     private javax.swing.JCheckBox chkTos;
+    private javax.swing.JComboBox<String> cmbCategoria;
     private javax.swing.JCheckBox jCheckBox7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
