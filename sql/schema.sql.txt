@@ -1,0 +1,85 @@
+-- ============================================
+-- SISTEMA EXPERTO DE DIAGNOSTICO MEDICO
+-- Base de datos MySQL
+-- ============================================
+
+CREATE DATABASE IF NOT EXISTS sistema_experto_medico;
+USE sistema_experto_medico;
+
+-- Tabla de categorias
+CREATE TABLE categorias (
+    id_categoria INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL UNIQUE
+);
+
+-- Tabla de sintomas
+CREATE TABLE sintomas (
+    id_sintoma INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL UNIQUE
+);
+
+-- Tabla de enfermedades
+CREATE TABLE enfermedades (
+    id_enfermedad INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL UNIQUE,
+    id_categoria INT NOT NULL,
+    recomendacion TEXT NOT NULL,
+    FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria)
+);
+
+-- Tabla de relacion enfermedad-sintoma
+CREATE TABLE enfermedad_sintoma (
+    id_enfermedad INT NOT NULL,
+    id_sintoma INT NOT NULL,
+    PRIMARY KEY (id_enfermedad, id_sintoma),
+    FOREIGN KEY (id_enfermedad) REFERENCES enfermedades(id_enfermedad),
+    FOREIGN KEY (id_sintoma) REFERENCES sintomas(id_sintoma)
+);
+
+-- Tabla de pacientes
+CREATE TABLE pacientes (
+    id_paciente INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL,
+    edad INT NOT NULL,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabla de historial de diagnosticos
+CREATE TABLE diagnosticos (
+    id_diagnostico INT AUTO_INCREMENT PRIMARY KEY,
+    id_paciente INT NOT NULL,
+    id_enfermedad INT NOT NULL,
+    fecha_diagnostico TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    sintomas_presentados TEXT NOT NULL,
+    FOREIGN KEY (id_paciente) REFERENCES pacientes(id_paciente),
+    FOREIGN KEY (id_enfermedad) REFERENCES enfermedades(id_enfermedad)
+);
+
+
+-- DATOS INICIALES
+
+
+INSERT INTO categorias (nombre) VALUES 
+('viral'), ('cronica'), ('alergia'), ('bacteriana');
+
+INSERT INTO sintomas (nombre) VALUES 
+('fiebre'), ('tos'), ('dolor_cabeza'), ('dolor_muscular'),
+('estornudos'), ('dolor_garganta'), ('sed'), ('cansancio'),
+('perdida_peso'), ('perdida_gusto_olfato'), ('erupcion'),
+('picazon'), ('nausea'), ('sensibilidad_luz'), ('ojos_lagrimosos');
+
+INSERT INTO enfermedades (nombre, id_categoria, recomendacion) VALUES 
+('gripe', 1, 'Descansar, hidratar, consultar medico'),
+('resfriado', 1, 'Descansar, hidratar'),
+('covid19', 1, 'Aislamiento, consultar medico'),
+('diabetes', 2, 'Controlar dieta, consultar especialista'),
+('migrana', 2, 'Descansar, evitar luz intensa'),
+('alergia', 3, 'Evitar alergenos, antihistaminicos');
+
+INSERT INTO enfermedad_sintoma (id_enfermedad, id_sintoma) VALUES 
+(1, 1), (1, 2), (1, 3), (1, 4),
+(2, 2), (2, 5), (2, 6),
+(3, 1), (3, 2), (3, 8), (3, 10),
+(4, 7), (4, 8), (4, 9),
+(5, 3), (5, 13), (5, 14),
+(6, 5), (6, 12), (6, 15);
