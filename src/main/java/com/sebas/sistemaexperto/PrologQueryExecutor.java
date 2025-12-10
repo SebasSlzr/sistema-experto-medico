@@ -41,3 +41,45 @@ public class PrologQueryExecutor {
             Term enfTerm = solucion.get("Enfermedad");
             if (enfTerm != null) {
                 String nombreEnf = enfTerm.toString();
+                if (!enfermedadesEncontradas.contains(nombreEnf)) {
+                    enfermedadesEncontradas.add(nombreEnf);
+                }
+            }
+        }
+        q.close();
+        
+        return enfermedadesEncontradas;
+    }
+    
+    public static String obtenerRecomendacion(String enfermedad) {
+        String consulta = "recomendacion(" + enfermedad + ", R)";
+        Query q = new Query(consulta);
+        
+        if (q.hasSolution()) {
+            Map<String, Term> solucion = q.oneSolution();
+            Term recTerm = solucion.get("R");
+            q.close();
+            if (recTerm != null) {
+                return recTerm.toString().replace("'", "");
+            }
+        }
+        q.close();
+        return "Consultar con un medico";
+    }
+    
+    public static String obtenerCategoria(String enfermedad) {
+        String consulta = "categoria(" + enfermedad + ", C)";
+        Query q = new Query(consulta);
+        
+        if (q.hasSolution()) {
+            Map<String, Term> solucion = q.oneSolution();
+            Term catTerm = solucion.get("C");
+            q.close();
+            if (catTerm != null) {
+                return catTerm.toString();
+            }
+        }
+        q.close();
+        return "desconocida";
+    }
+}
