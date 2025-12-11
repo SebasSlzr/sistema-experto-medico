@@ -5,6 +5,7 @@
 package com.sebas.sistemaexperto;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.SQLException;
 
 /**
  *
@@ -49,6 +50,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         btnDiagnosticar = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         cmbCategoria = new javax.swing.JComboBox<>();
+        btnGuardar = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtResultados = new javax.swing.JTextArea();
@@ -60,7 +62,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTextArea1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(700, 500));
 
         jLabel1.setText("Sistema Experto - Diagnóstico Médico");
 
@@ -126,6 +127,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         cmbCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todas", "viral", "cronica", "alergia", "bacteriana" }));
 
+        btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -157,7 +165,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addGap(18, 18, 18)
-                        .addComponent(cmbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnGuardar)
+                            .addComponent(cmbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -194,7 +204,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(cmbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 127, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(btnGuardar)
+                .addGap(0, 86, Short.MAX_VALUE))
         );
 
         txtResultados.setColumns(20);
@@ -307,6 +319,56 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     txtResultados.setText(resultado.toString());
     }//GEN-LAST:event_btnDiagnosticarActionPerformed
 
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        String nombre = txtNombre.getText().trim();
+    int edad = (Integer) spnEdad.getValue();
+    
+    if (nombre.isEmpty()) {
+        txtResultados.setText("Ingrese el nombre del paciente");
+        return;
+    }
+    
+    // Obtener sintomas seleccionados
+    List<String> sintomas = new ArrayList<>();
+    if (chkFiebre.isSelected()) sintomas.add("fiebre");
+    if (chkTos.isSelected()) sintomas.add("tos");
+    if (chkDolorCabeza.isSelected()) sintomas.add("dolor_cabeza");
+    if (chkDolorMuscular.isSelected()) sintomas.add("dolor_muscular");
+    if (chkEstornudos.isSelected()) sintomas.add("estornudos");
+    if (chkSed.isSelected()) sintomas.add("sed");
+    if (chkCansancio.isSelected()) sintomas.add("cansancio");
+    if (chkNausea.isSelected()) sintomas.add("nausea");
+    
+    if (sintomas.isEmpty()) {
+        txtResultados.setText("Seleccione al menos un sintoma");
+        return;
+    }
+    
+    try {
+        PacienteDAO dao = new PacienteDAO();
+        
+        // Guardar paciente
+        int idPaciente = dao.guardarPaciente(nombre, edad);
+        
+        // Obtener diagnosticos
+        List<String> enfermedades = PrologQueryExecutor.diagnosticar(sintomas);
+        
+        // Guardar cada diagnostico
+        String sintomasTexto = String.join(", ", sintomas);
+        for (String enf : enfermedades) {
+            int idEnfermedad = dao.obtenerIdEnfermedad(enf);
+            if (idEnfermedad > 0) {
+                dao.guardarDiagnostico(idPaciente, idEnfermedad, sintomasTexto);
+            }
+        }
+        
+        txtResultados.setText("Paciente guardado con ID: " + idPaciente + "\nDiagnosticos guardados: " + enfermedades.size());
+        
+        } catch (SQLException e) {
+            txtResultados.setText("Error al guardar: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -325,6 +387,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDiagnosticar;
+    private javax.swing.JButton btnGuardar;
     private javax.swing.JCheckBox chkCansancio;
     private javax.swing.JCheckBox chkDolorCabeza;
     private javax.swing.JCheckBox chkDolorMuscular;
