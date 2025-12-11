@@ -59,6 +59,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         txtResultados = new javax.swing.JTextArea();
         btnHistorial = new javax.swing.JButton();
+        btnCronicas = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        txtBuscarPaciente = new javax.swing.JTextField();
+        btnBuscarPaciente = new javax.swing.JButton();
 
         jCheckBox7.setText("Sed");
 
@@ -131,6 +135,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jLabel5.setText("Categoria:");
 
         cmbCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todas", "viral", "cronica", "alergia", "bacteriana" }));
+        cmbCategoria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbCategoriaActionPerformed(evt);
+            }
+        });
 
         btnGuardar.setText("Guardar");
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
@@ -237,6 +246,24 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
         });
 
+        btnCronicas.setText("Ver E.Cronicas");
+        btnCronicas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCronicasActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("Buscar paciente:");
+
+        txtBuscarPaciente.setText("Nombre");
+
+        btnBuscarPaciente.setText("Buscar");
+        btnBuscarPaciente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarPacienteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -249,7 +276,16 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         .addGap(61, 61, 61)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnHistorial)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnCronicas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtBuscarPaciente))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnBuscarPaciente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnHistorial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(248, 248, 248)
                         .addComponent(jLabel1)))
@@ -268,7 +304,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         .addGap(20, 20, 20)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnHistorial)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnHistorial)
+                            .addComponent(btnCronicas))
+                        .addGap(5, 5, 5)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(txtBuscarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnBuscarPaciente))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
@@ -475,6 +518,46 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }
     }//GEN-LAST:event_btnHistorialActionPerformed
 
+    private void cmbCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCategoriaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbCategoriaActionPerformed
+
+    private void btnCronicasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCronicasActionPerformed
+        List<String> cronicas = PrologQueryExecutor.enfermedadesCronicas();
+    
+    StringBuilder resultado = new StringBuilder();
+    resultado.append("=== ENFERMEDADES CRONICAS ===\n\n");
+    
+    if (cronicas.isEmpty()) {
+        resultado.append("No se encontraron enfermedades cronicas.");
+    } else {
+        for (String enf : cronicas) {
+            String rec = PrologQueryExecutor.obtenerRecomendacion(enf);
+            resultado.append("- ").append(enf).append("\n");
+            resultado.append("  Recomendacion: ").append(rec).append("\n\n");
+        }
+    }
+    
+    txtResultados.setText(resultado.toString());
+    }//GEN-LAST:event_btnCronicasActionPerformed
+
+    private void btnBuscarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarPacienteActionPerformed
+        String nombreBuscar = txtBuscarPaciente.getText().trim();
+    
+    if (nombreBuscar.isEmpty()) {
+        txtResultados.setText("Ingrese un nombre para buscar.");
+        return;
+    }
+    
+    try {
+        PacienteDAO dao = new PacienteDAO();
+        String historial = dao.buscarHistorialPorPaciente(nombreBuscar);
+        txtResultados.setText(historial);
+    } catch (SQLException e) {
+        txtResultados.setText("Error al buscar: " + e.getMessage());
+    }
+    }//GEN-LAST:event_btnBuscarPacienteActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -492,6 +575,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscarPaciente;
+    private javax.swing.JButton btnCronicas;
     private javax.swing.JButton btnDiagnosticar;
     private javax.swing.JButton btnExportar;
     private javax.swing.JButton btnGuardar;
@@ -511,12 +596,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JSpinner spnEdad;
+    private javax.swing.JTextField txtBuscarPaciente;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextArea txtResultados;
     // End of variables declaration//GEN-END:variables

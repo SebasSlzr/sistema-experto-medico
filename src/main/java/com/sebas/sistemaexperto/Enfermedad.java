@@ -11,9 +11,6 @@ public class Enfermedad {
     private String recomendacion;
     private List<String> sintomas;
     
-    public Enfermedad() {
-        this.sintomas = new ArrayList<>();
-    }
     
     public Enfermedad(int id, String nombre, String categoria, String recomendacion) {
         this.id = id;

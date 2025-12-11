@@ -60,4 +60,41 @@ public class PacienteDAO {
         stmt.close();
         return id;
     }
+    
+    public String buscarHistorialPorPaciente(String nombrePaciente) throws SQLException {
+        String sql = "SELECT p.nombre, p.edad, e.nombre AS enfermedad, d.sintomas_presentados, d.fecha_diagnostico " +
+                     "FROM diagnosticos d " +
+                     "JOIN pacientes p ON d.id_paciente = p.id_paciente " +
+                     "JOIN enfermedades e ON d.id_enfermedad = e.id_enfermedad " +
+                     "WHERE p.nombre LIKE ? " +
+                     "ORDER BY d.fecha_diagnostico DESC";
+        
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, "%" + nombrePaciente + "%");
+        ResultSet rs = stmt.executeQuery();
+        
+        StringBuilder resultado = new StringBuilder();
+        resultado.append(" HISTORIAL DE: ").append(nombrePaciente).append(" ===\n\n");
+        
+        boolean encontrado = false;
+        while (rs.next()) {
+            encontrado = true;
+            resultado.append("Paciente: ").append(rs.getString("nombre"));
+            resultado.append(" (").append(rs.getInt("edad")).append(" años)\n");
+            resultado.append("Enfermedad: ").append(rs.getString("enfermedad")).append("\n");
+            resultado.append("Sintomas: ").append(rs.getString("sintomas_presentados")).append("\n");
+            resultado.append("Fecha: ").append(rs.getString("fecha_diagnostico")).append("\n");
+            resultado.append("-------------------\n");
+        }
+        
+        if (!encontrado) {
+            resultado.append("No se encontraron diagnosticos para este paciente.");
+        }
+        
+        rs.close();
+        stmt.close();
+        
+        return resultado.toString();
+    }
+    
 }

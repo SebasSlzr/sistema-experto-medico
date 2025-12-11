@@ -135,20 +135,26 @@ public class PrologQueryExecutor {
         return enfermedades;
     }
     
-    public static boolean esCronica(String enfermedad) {
-        String consulta = "es_cronica(" + enfermedad + ")";
-        Query q = new Query(consulta);
-        boolean resultado = q.hasSolution();
-        q.close();
-        return resultado;
-    }
     
-    public static boolean esViral(String enfermedad) {
-        String consulta = "es_viral(" + enfermedad + ")";
+    public static List<String> enfermedadesCronicas() {
+        List<String> enfermedades = new ArrayList<>();
+        
+        String consulta = "enfermedades_cronicas(Enfermedad)";
         Query q = new Query(consulta);
-        boolean resultado = q.hasSolution();
+        
+        while (q.hasMoreSolutions()) {
+            Map<String, Term> solucion = q.nextSolution();
+            Term enfTerm = solucion.get("Enfermedad");
+            if (enfTerm != null) {
+                String nombre = enfTerm.toString();
+                if (!enfermedades.contains(nombre)) {
+                    enfermedades.add(nombre);
+                }
+            }
+        }
         q.close();
-        return resultado;
+        
+        return enfermedades;
     }
     
 }

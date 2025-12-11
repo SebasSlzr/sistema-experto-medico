@@ -47,15 +47,6 @@ diagnostico(SintomasUsuario, Enfermedad) :-
 
 
 % ============================================
-% REGLA: diagnostico_estricto/2
-% Devuelve enfermedad donde TODOS los sintomas coinciden
-% ============================================
-diagnostico_estricto(SintomasUsuario, Enfermedad) :-
-    enfermedad(Enfermedad, SintomasEnfermedad, _, _),
-    coincide_sintomas(SintomasUsuario, SintomasEnfermedad).
-
-
-% ============================================
 % REGLA: diagnostico_categoria/3
 % Diagnostico filtrado por categoria
 % ============================================
@@ -81,14 +72,6 @@ categoria(Enfermedad, Categoria) :-
 
 
 % ============================================
-% REGLA: sintomas_de/2
-% Obtiene los sintomas de una enfermedad
-% ============================================
-sintomas_de(Enfermedad, Sintomas) :-
-    enfermedad(Enfermedad, Sintomas, _, _).
-
-
-% ============================================
 % REGLA: enfermedades_por_sintoma/2
 % Encuentra enfermedades que tengan un sintoma especifico
 % Usa recursion en lugar de findall
@@ -96,43 +79,14 @@ sintomas_de(Enfermedad, Sintomas) :-
 enfermedades_por_sintoma(Sintoma, Enfermedad) :-
     enfermedad(Enfermedad, Sintomas, _, _),
     pertenece(Sintoma, Sintomas).
-
+    
 
 % ============================================
-% REGLA: es_cronica/1
-% Verifica si una enfermedad es cronica
+% REGLA: enfermedades_cronicas/1
+% Lista todas las enfermedades cronicas
 % ============================================
-es_cronica(Enfermedad) :-
+enfermedades_cronicas(Enfermedad) :-
     enfermedad(Enfermedad, _, cronica, _).
 
 
-% ============================================
-% REGLA: es_viral/1
-% Verifica si una enfermedad es viral
-% ============================================
-es_viral(Enfermedad) :-
-    enfermedad(Enfermedad, _, viral, _).
 
-
-% ============================================
-% REGLA: contar_coincidencias/3
-% Cuenta cuantos sintomas del usuario coinciden
-% ============================================
-contar_coincidencias([], _, 0).
-contar_coincidencias([Sintoma|Resto], SintomasEnf, Contador) :-
-    pertenece(Sintoma, SintomasEnf),
-    contar_coincidencias(Resto, SintomasEnf, ContadorResto),
-    Contador is ContadorResto + 1.
-contar_coincidencias([Sintoma|Resto], SintomasEnf, Contador) :-
-    \+ pertenece(Sintoma, SintomasEnf),
-    contar_coincidencias(Resto, SintomasEnf, Contador).
-
-
-% ============================================
-% REGLA: longitud/2
-% Calcula la longitud de una lista
-% ============================================
-longitud([], 0).
-longitud([_|Resto], N) :-
-    longitud(Resto, N1),
-    N is N1 + 1.
