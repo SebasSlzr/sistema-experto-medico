@@ -6,6 +6,9 @@ package com.sebas.sistemaexperto;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.SQLException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /**
  *
@@ -51,6 +54,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         cmbCategoria = new javax.swing.JComboBox<>();
         btnGuardar = new javax.swing.JButton();
+        btnExportar = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtResultados = new javax.swing.JTextArea();
@@ -134,6 +138,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
         });
 
+        btnExportar.setText("Exportar");
+        btnExportar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExportarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -167,7 +178,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnGuardar)
-                            .addComponent(cmbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(cmbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnExportar))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -206,7 +218,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     .addComponent(cmbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btnGuardar)
-                .addGap(0, 86, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(btnExportar)
+                .addGap(0, 45, Short.MAX_VALUE))
         );
 
         txtResultados.setColumns(20);
@@ -369,6 +383,47 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
+    private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
+        try {
+        Connection conn = MySQLConnection.getInstance().getConnection();
+        
+        String sql = "SELECT p.nombre, p.edad, e.nombre AS enfermedad, c.nombre AS categoria, " +
+                     "d.sintomas_presentados, d.fecha_diagnostico " +
+                     "FROM diagnosticos d " +
+                     "JOIN pacientes p ON d.id_paciente = p.id_paciente " +
+                     "JOIN enfermedades e ON d.id_enfermedad = e.id_enfermedad " +
+                     "JOIN categorias c ON e.id_categoria = c.id_categoria";
+        
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+        
+        StringBuilder csv = new StringBuilder();
+        csv.append("Nombre,Edad,Enfermedad,Categoria,Sintomas,Fecha\n");
+        
+        while (rs.next()) {
+            csv.append(rs.getString("nombre")).append(",");
+            csv.append(rs.getInt("edad")).append(",");
+            csv.append(rs.getString("enfermedad")).append(",");
+            csv.append(rs.getString("categoria")).append(",");
+            csv.append(rs.getString("sintomas_presentados")).append(",");
+            csv.append(rs.getString("fecha_diagnostico")).append("\n");
+        }
+        
+        rs.close();
+        stmt.close();
+        
+        // Guardar archivo
+        java.io.FileWriter writer = new java.io.FileWriter("historial.csv");
+        writer.write(csv.toString());
+        writer.close();
+        
+        txtResultados.setText("Archivo exportado: historial.csv");
+        
+        } catch (Exception e) {
+            txtResultados.setText("Error al exportar: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnExportarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -387,6 +442,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDiagnosticar;
+    private javax.swing.JButton btnExportar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JCheckBox chkCansancio;
     private javax.swing.JCheckBox chkDolorCabeza;
