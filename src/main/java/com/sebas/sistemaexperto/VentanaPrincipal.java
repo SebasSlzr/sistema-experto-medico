@@ -58,6 +58,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtResultados = new javax.swing.JTextArea();
+        btnHistorial = new javax.swing.JButton();
 
         jCheckBox7.setText("Sed");
 
@@ -229,6 +230,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         jScrollPane3.setViewportView(jScrollPane2);
 
+        btnHistorial.setText("Ver historial");
+        btnHistorial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHistorialActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -239,7 +247,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(61, 61, 61)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnHistorial)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(248, 248, 248)
                         .addComponent(jLabel1)))
@@ -257,6 +267,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnHistorial)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
@@ -424,6 +436,45 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnExportarActionPerformed
 
+    private void btnHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistorialActionPerformed
+        try {
+        Connection conn = MySQLConnection.getInstance().getConnection();
+        
+        String sql = "SELECT p.nombre, p.edad, e.nombre AS enfermedad, d.sintomas_presentados, d.fecha_diagnostico " +
+                     "FROM diagnosticos d " +
+                     "JOIN pacientes p ON d.id_paciente = p.id_paciente " +
+                     "JOIN enfermedades e ON d.id_enfermedad = e.id_enfermedad " +
+                     "ORDER BY d.fecha_diagnostico DESC";
+        
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+        
+        StringBuilder resultado = new StringBuilder();
+        resultado.append(" HISTORIAL DE DIAGNOSTICOS \n\n");
+        
+        while (rs.next()) {
+            resultado.append("Paciente: ").append(rs.getString("nombre"));
+            resultado.append(" (").append(rs.getInt("edad")).append(" años)\n");
+            resultado.append("Enfermedad: ").append(rs.getString("enfermedad")).append("\n");
+            resultado.append("Sintomas: ").append(rs.getString("sintomas_presentados")).append("\n");
+            resultado.append("Fecha: ").append(rs.getString("fecha_diagnostico")).append("\n");
+            resultado.append("-------------------\n");
+        }
+        
+        rs.close();
+        stmt.close();
+        
+        if (resultado.toString().equals(" HISTORIAL DE DIAGNOSTICOS \n\n")) {
+            resultado.append("No hay diagnosticos guardados.");
+        }
+        
+        txtResultados.setText(resultado.toString());
+        
+    } catch (SQLException e) {
+        txtResultados.setText("Error: " + e.getMessage());
+    }
+    }//GEN-LAST:event_btnHistorialActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -444,6 +495,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnDiagnosticar;
     private javax.swing.JButton btnExportar;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnHistorial;
     private javax.swing.JCheckBox chkCansancio;
     private javax.swing.JCheckBox chkDolorCabeza;
     private javax.swing.JCheckBox chkDolorMuscular;
