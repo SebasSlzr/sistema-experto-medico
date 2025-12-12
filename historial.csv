@@ -1,10 +1,13 @@
 Nombre,Edad,Enfermedad,Categoria,Sintomas,Fecha
 Dani,16,gripe,viral,dolor_muscular, sed,2025-12-10 19:29:42
-Dani,16,diabetes,cronica,dolor_muscular, sed,2025-12-10 19:29:42
+Nombre,34,gripe,viral,dolor_cabeza, estornudos,2025-12-11 16:18:55
+Finaltest,0,gripe,viral,tos,2025-12-11 19:25:43
+Nombre,34,resfriado,viral,dolor_cabeza, estornudos,2025-12-11 16:18:55
+Finaltest,0,resfriado,viral,tos,2025-12-11 19:25:43
 Juanca,4,covid19,viral,cansancio, nausea,2025-12-11 14:43:16
+Finaltest,0,covid19,viral,tos,2025-12-11 19:25:43
+Dani,16,diabetes,cronica,dolor_muscular, sed,2025-12-10 19:29:42
 Juanca,4,diabetes,cronica,cansancio, nausea,2025-12-11 14:43:16
 Juanca,4,migrana,cronica,cansancio, nausea,2025-12-11 14:43:16
-Nombre,34,gripe,viral,dolor_cabeza, estornudos,2025-12-11 16:18:55
-Nombre,34,resfriado,viral,dolor_cabeza, estornudos,2025-12-11 16:18:55
 Nombre,34,migrana,cronica,dolor_cabeza, estornudos,2025-12-11 16:18:55
 Nombre,34,alergia,alergia,dolor_cabeza, estornudos,2025-12-11 16:18:55
